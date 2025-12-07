@@ -115,3 +115,6 @@ Tableau (Interactive Dashboards)
 Machine Learning – Random Forest Regressor
 
 Version Control – Git & GitHub
+
+[Project Documentation](https://public.tableau.com/app/profile/fathima.afrin7/viz/UAERealEstateAnalytics/Dashboard1?publish=yes)
+
