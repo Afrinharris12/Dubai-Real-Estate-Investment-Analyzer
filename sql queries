@@ -1,0 +1,68 @@
+use properties;
+--Top 5 most expensive locations by average price
+select  top 5 
+location ,
+concat(cast(round(AVG(price_aed)/ 1000000.0,2)as float),'M') as avg_price from properties
+group by location
+order by avg(price_aed) desc
+
+--Properties with best value (price_per_sqft below average, amenities above average)
+select * from properties 
+where size_sqft > 
+(select 
+ avg(size_sqft) from properties) 
+ and 
+amenities_score > (select AVG(amenities_score) FROM properties);
+
+--Beach access premium - how much more do beach properties cost?
+select location,category ,price_aed from properties
+where has_beach_access = 1
+
+
+-- Bedroom distribution by location (1BR, 2BR, 3BR counts)
+select category ,count(bedrooms) as bedroom_count from properties
+group by category
+
+
+--Luxury vs Budget comparison - average prices by category
+select category, concat(cast(round(avg(price_aed)/1000000.0 ,0)as float),'M')avg_price from properties
+where category  in ('Luxury' ,'Budget')
+group by category
+
+
+--New vs Old properties (built after 2015 vs before)
+select  
+case  when year_built > 2015 then 'New'
+else 'old'
+end as property_type,
+count(*) as properties,
+concat(cast(round(avg(price_aed)/1000000.0 ,0)as float),'M') as avg_price,
+avg(size_sqft) as avg_size_sqft
+from properties
+group by case
+when year_built > 2015 then 'New'
+else 'old'
+end;
+
+--Metro proximity impact onMetro proximity impact on price_per_sqft
+select near_metro, count(*)property_count, avg(size_sqft)avg_price_per_sqrft from properties
+group by  near_metro
+
+--Most common view types by location
+SELECT TOP 10
+    location,
+    view_type,
+    COUNT(*) AS total_properties
+FROM properties
+GROUP BY location, view_type
+ORDER BY total_properties DESC;
+
+
+--Properties with all amenities (pool+gym+beach)
+select * from properties
+where has_pool =1
+and has_gym =1
+and has_beach_access = 1
+
+
+
